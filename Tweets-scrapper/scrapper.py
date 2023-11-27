@@ -1,17 +1,14 @@
-from flask import Flask, jsonify
+from flask import Flask
 import os
 import json
-from twitter_scraper_selenium import scrape_keyword
 import pandas as pd
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import csv
 
 app = Flask(__name__)
+
 
 # Authenticate to Twitter
 consumer_key = os.getenv("TWITTER_CONSUMER_KEY")
@@ -20,26 +17,6 @@ access_token = os.getenv("TWITTER_ACCESS_TOKEN")
 access_token_secret = os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
 bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
 
-# Configure Chrome options for headless scraping (no GUI)
-# chrome_options = Options()
-
-"""chrome_options.add_argument('window-size=2000x1500')
-chrome_options.add_argument("--headless=new")  # Ensure GUI is off
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")"""
-
-# Prompt user for search term and amount of tweets
-# print("Enter the search term you would like to scrape: ")
-# search_term = input()
-# print("Enter the amount of tweets you'd like to return: ")
-# amount = int(input())
-
-# URLs
-# login_url = "https://twitter.com/login"
-
-# # Initialize Chrome driver with the configured options
-# # driver = webdriver.Chrome(ChromeDriverManager().install())
-# driver = webdriver.Firefox()
 
 def save_to_json(tweet_data):
     filename = "tweets.json"  # JSON filename
@@ -60,18 +37,6 @@ def save_to_csv(tweet_data):
 
     print("Tweet data saved to", filename)
 
-# Function to perform login
-# def login():
-    # driver.get(login_url)
-    # time.sleep(2)
-    # driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input').send_keys('saifelislambettaoui1955@gmail.com')
-    # time.sleep(1)
-    # driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]/div').click()
-    # time.sleep(2)
-    # # driver.find_element("xpath", '/html/body/div/div/div/div[2]/main/div/div/div[1]/form/div/div[2]/label/div/div[2]/div/input').send_keys('20SAIF02saif')
-    # time.sleep(1)
-    # driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div/div').click()
-    # time.sleep(2)
 
 # Function to perform the search and scrape tweets
 def search(search_term):
@@ -113,6 +78,7 @@ def search(search_term):
     print("Number of tweets found:", len(tweet_data))
     driver.close()
     return tweet_data[:amount]
+
 
 # Function to parse tweet HTML and extract relevant information
 def parse(resp, tweet_data):
@@ -159,10 +125,9 @@ def parse(resp, tweet_data):
     return result
 
 
-
 @app.route('/tweets/<search_term>')
 def get_tweets(search_term):
-    # Main program flow
+    
     tweet_data = search(search_term)
     save_to_csv(tweet_data)
     save_to_json(tweet_data)
