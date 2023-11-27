@@ -45,12 +45,12 @@ def save_to_csv(tweet_data):
 def login():
     driver.get(login_url)
     time.sleep(2)
-    driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input').send_keys('saif_bett')
+    driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input').send_keys('saifelislambettaoui1955@gmail.com')
     time.sleep(1)
     driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]/div').click()
-    time.sleep(20)
+    time.sleep(2)
     # driver.find_element("xpath", '/html/body/div/div/div/div[2]/main/div/div/div[1]/form/div/div[2]/label/div/div[2]/div/input').send_keys('20SAIF02saif')
-    # time.sleep(1)
+    time.sleep(1)
     driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div/div').click()
     time.sleep(2)
 
