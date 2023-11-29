@@ -53,7 +53,8 @@ def search(search_term):
     time.sleep(1)
     driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]/div').click()
     time.sleep(2)
-    # driver.find_element("xpath", '/html/body/div/div/div/div[2]/main/div/div/div[1]/form/div/div[2]/label/div/div[2]/div/input').send_keys('20SAIF02saif')
+    # driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[1]/div[1]/div/div/div[1]/div[1]/div/div/div/div[2]/div/label/div/div[1]/div/input').send_keys('20SAIF02saif')
+    driver.find_element("name" ,"password").send_keys('20SAIF02saif')
     time.sleep(1)
     driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div/div').click()
     time.sleep(2)
@@ -132,6 +133,7 @@ def get_tweets(search_term):
     save_to_csv(tweet_data)
     save_to_json(tweet_data)
     return tweet_data
+    
     
 
 if __name__ == '__main__':
