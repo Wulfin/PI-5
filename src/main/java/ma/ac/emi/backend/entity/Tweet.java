@@ -30,5 +30,5 @@ public class Tweet implements Serializable {
     @Column(nullable = false, length = 280)
     private String content;
 
-
+    
 }
