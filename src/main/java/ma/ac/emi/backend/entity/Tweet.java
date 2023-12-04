@@ -1,5 +1,6 @@
 package ma.ac.emi.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -22,6 +23,7 @@ public class Tweet implements Serializable {
     private Long id;
 
     @Column(nullable = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
     @Column(nullable = false)
@@ -29,6 +31,9 @@ public class Tweet implements Serializable {
 
     @Column(nullable = false, length = 280)
     private String content;
+
+    @Column(nullable = false)
+    private String sentiment;
 
     
 }

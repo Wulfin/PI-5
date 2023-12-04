@@ -15,10 +15,10 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(TweetRepository tweetRepository){
+    CommandLineRunner commandLineRunner(){
 
         return args -> {
-            Tweet tweet1 = Tweet.builder()
+            /*Tweet tweet1 = Tweet.builder()
                     .content("Contenu tweet")
                     .sentiment("positif")
                     .username("souhailxx")
@@ -29,7 +29,7 @@ public class BackendApplication {
                     .sentiment("negatif")
                     .username("dearze")
                     .build();
-            tweetRepository.save(tweet2);
+            tweetRepository.save(tweet2);*/
 
         };
     }

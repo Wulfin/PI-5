@@ -1,0 +1,57 @@
+POST http://localhost:8081/tweets
+Content-Type: application/json
+
+{
+  "content": "1st Tweet",
+  "timestamp": "2023-12-05 10:30:00",
+  "sentiment": "Positive",
+  "username": "Souhail"
+}
+###
+POST http://localhost:8081/tweets/batch
+Content-Type: application/json
+
+[
+  {
+    "content": "1st Tweet",
+    "timestamp": "2023-12-05 10:30:30",
+    "sentiment": "Positive",
+    "username": "Souhail"
+  },
+  {
+    "content": "2nd Tweet",
+    "timestamp": "2023-12-05 10:30:21",
+    "sentiment": "Negative",
+    "username": "Souhail"
+  },
+  {
+    "content": "3rd Tweet",
+    "timestamp": "2023-12-05 11:30:00",
+    "sentiment": "Positive",
+    "username": "Otman"
+  },
+  {
+    "content": "4th Tweet",
+    "timestamp": "2023-12-05 10:30:00",
+    "sentiment": "Positive",
+    "username": "Otman"
+  },
+  {
+    "content": "5th Tweet",
+    "timestamp": "2023-12-05 10:30:00",
+    "sentiment": "Positive",
+    "username": "Saif"
+  }
+]
+###
+GET http://localhost:8081/tweets
+###
+GET http://localhost:8081/tweets/1
+###
+GET http://localhost:8081/tweets/username/Souhail
+###
+GET http://localhost:8081/tweets/2
+###
+DELETE http://localhost:8081/tweets/2
+###
+GET http://localhost:8081/tweets
