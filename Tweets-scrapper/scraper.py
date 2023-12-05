@@ -4,18 +4,11 @@ import json
 import pandas as pd
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 import time
 import csv
 
 app = Flask(__name__)
-
-
-# Authenticate to Twitter
-consumer_key = os.getenv("TWITTER_CONSUMER_KEY")
-consumer_secret = os.getenv("TWITTER_CONSUMER_SECRET")
-access_token = os.getenv("TWITTER_ACCESS_TOKEN")
-access_token_secret = os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
-bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
 
 
 def save_to_json(tweet_data):
@@ -40,11 +33,16 @@ def save_to_csv(tweet_data):
 
 # Function to perform the search and scrape tweets
 def search(search_term):
+    # options = webdriver.ChromeOptions()
+    # options.add_argument('-ignore-ssl-errors=yes')
+    # options.add_argument('-ignore-certificate-errors')
+    # driver = webdriver.Remote(command_executor='http://localhost:4444/wd/hub', options=options )
+    # driver.maximize_window()
+    
+    options = Options()
+    options.headless = True
+    driver = webdriver.Firefox(options=options)
     login_url = "https://twitter.com/login"
-
-    # Initialize Chrome driver with the configured options
-    # driver = webdriver.Chrome(ChromeDriverManager().install())
-    driver = webdriver.Firefox()
     amount = 50
     
     driver.get(login_url)
