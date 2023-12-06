@@ -131,6 +131,11 @@ def get_tweets(search_term):
     save_to_csv(tweet_data)
     save_to_json(tweet_data)
     return tweet_data
+
+@app.route('/hello')
+def get_hello():
+    
+    return "Hello, I am the scraper"
     
     
 
