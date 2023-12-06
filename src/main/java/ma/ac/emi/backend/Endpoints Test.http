@@ -55,3 +55,5 @@ GET http://localhost:8081/tweets/2
 DELETE http://localhost:8081/tweets/2
 ###
 GET http://localhost:8081/tweets
+###
+GET http://172.20.10.2:5001/tweets/palestine
