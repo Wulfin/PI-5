@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './FetchData.css';
 
@@ -6,6 +6,16 @@ const FetchData = () => {
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSentiment, setSelectedSentiment] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    const isWithinRange = (date, start, end) => {
+        if (!start && !end) return true;
+        if (start && !end) return date >= start;
+        if (!start && end) return date <= end;
+
+        return date >= start && date <= end;
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,12 +38,21 @@ const FetchData = () => {
         setSelectedSentiment(event.target.value);
     };
 
+    const handleStartDateChange = (event) => {
+        setStartDate(event.target.value);
+    };
+
+    const handleEndDateChange = (event) => {
+        setEndDate(event.target.value);
+    };
+
     const filteredData = data.filter((item) => {
         const matchesSearch = item.username.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesSentiment =
             selectedSentiment === '' || item.sentiment.toLowerCase() === selectedSentiment.toLowerCase();
+        const isWithinDateRange = isWithinRange(item.timestamp, startDate, endDate);
 
-        return matchesSearch && matchesSentiment;
+        return matchesSearch && matchesSentiment && isWithinDateRange;
     });
 
     return (
@@ -56,6 +75,17 @@ const FetchData = () => {
                         <option value='negative'>Negative</option>
                     </select>
                 </div>
+                <div className='search-filter-container'>
+                    <h4>Filter by Date Range:</h4>
+                    <div>
+                        <label>Start Date:</label>
+                        <input type='date' value={startDate} onChange={handleStartDateChange}/>
+                    </div>
+                    <div>
+                        <label>End Date:</label>
+                        <input type='date' value={endDate} onChange={handleEndDateChange}/>
+                    </div>
+                </div>
                 <h3>Tweets Sauvegardés</h3>
                 <table className='styled-table'>
                     <thead>
@@ -68,7 +98,7 @@ const FetchData = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {filteredData.map(({ id, timestamp, username, content, sentiment }) => (
+                    {filteredData.map(({id, timestamp, username, content, sentiment}) => (
                         <tr key={id}>
                             <td>{id}</td>
                             <td>{timestamp}</td>
