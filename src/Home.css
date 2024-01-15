@@ -1,0 +1,27 @@
+/* Home.css */
+
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #1da1f2, #14171a); /* Twitter-like gradient background */
+    color: #fff; /* White text color */
+}
+
+.twitter-welcome {
+    font-size: 3em;
+    text-align: center;
+    animation: fadeInUpAndScale 2s ease-in-out infinite; /* fadeInUpAndScale animation with infinite loop */
+}
+
+@keyframes fadeInUpAndScale {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

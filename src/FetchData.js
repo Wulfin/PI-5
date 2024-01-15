@@ -17,16 +17,29 @@ const FetchData = () => {
         return date >= start && date <= end;
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8081/tweets');
-                setData(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8081/tweets');
+            setData(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
+    const handleRefresh = () => {
+        fetchData();
+    };
+
+    const handleClearDatabase = async () => {
+        try {
+            await axios.delete('http://localhost:8081/tweets/delete/all');
+            fetchData();
+        } catch (error) {
+            console.error('Error clearing database:', error);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -60,12 +73,7 @@ const FetchData = () => {
             <div className='content-container'>
                 <div className='search-filter-container'>
                     <h4>Search by Username:</h4>
-                    <input
-                        type='text'
-                        placeholder='Enter username'
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                    />
+                    <input type='text' placeholder='Enter username' value={searchTerm} onChange={handleSearchChange}/>
                 </div>
                 <div className='search-filter-container'>
                     <h4>Filter by Sentiment:</h4>
@@ -85,6 +93,10 @@ const FetchData = () => {
                         <label>End Date:</label>
                         <input type='date' value={endDate} onChange={handleEndDateChange}/>
                     </div>
+                </div>
+                <div className='button-container'>
+                    <button onClick={handleRefresh}>Refresh Page</button>
+                    <button onClick={handleClearDatabase}>Clear Database</button>
                 </div>
                 <h3>Tweets Sauvegardés</h3>
                 <table className='styled-table'>
