@@ -1,0 +1,44 @@
+/* FetchData.css */
+
+.page-container {
+    background-color: #f5f8fa; /* Light blue background */
+    padding: 20px;
+    height: 100vh; /* Full viewport height */
+}
+
+.content-container {
+    background-color: #ffffff; /* White background for the content */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for a subtle lift */
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.styled-table th, .styled-table td {
+    border: 1px solid #e1e8ed; /* Light gray border */
+    padding: 10px;
+    text-align: left;
+}
+
+.styled-table th {
+    background-color: #eff7ff; /* Light blue background for header */
+    color: #2670c2; /* Dark blue text color */
+}
+
+/* Additional styling for sentiment-specific colors */
+.positive {
+    color: #3cba9f; /* Green color for positive sentiment */
+}
+
+.negative {
+    color: #e74c3c; /* Red color for negative sentiment */
+}
+
+.neutral {
+    color: #555; /* Dark gray color for neutral sentiment */
+}
