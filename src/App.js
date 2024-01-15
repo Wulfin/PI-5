@@ -1,9 +1,14 @@
+import React from 'react';
 import './App.css';
-import FetchData from "./FetchData";
+import FetchData from './FetchData';
+import NavBar from './NavBar';
 
 function App() {
     return (
-        <FetchData></FetchData>
+        <div>
+            <NavBar />
+            <FetchData />
+        </div>
     );
 }
 

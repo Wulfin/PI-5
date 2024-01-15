@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './FetchData.css'; // Import your custom CSS file for styling
 
@@ -33,7 +33,7 @@ const FetchData = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {data.map(({ id, timestamp, username, content, sentiment }) => (
+                    {data.map(({id, timestamp, username, content, sentiment}) => (
                         <tr key={id}>
                             <td>{id}</td>
                             <td>{timestamp}</td>
