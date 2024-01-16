@@ -1,10 +1,13 @@
-import React, {useEffect, useState} from 'react';
+// FetchData.js
+
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './FetchData.css';
 
 const FetchData = () => {
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [contentSearchTerm, setContentSearchTerm] = useState('');
     const [selectedSentiment, setSelectedSentiment] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -47,6 +50,10 @@ const FetchData = () => {
         setSearchTerm(event.target.value);
     };
 
+    const handleContentSearchChange = (event) => {
+        setContentSearchTerm(event.target.value);
+    };
+
     const handleSentimentChange = (event) => {
         setSelectedSentiment(event.target.value);
     };
@@ -61,11 +68,12 @@ const FetchData = () => {
 
     const filteredData = data.filter((item) => {
         const matchesSearch = item.username.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesContentSearch = item.content.toLowerCase().includes(contentSearchTerm.toLowerCase());
         const matchesSentiment =
             selectedSentiment === '' || item.sentiment.toLowerCase() === selectedSentiment.toLowerCase();
         const isWithinDateRange = isWithinRange(item.timestamp, startDate, endDate);
 
-        return matchesSearch && matchesSentiment && isWithinDateRange;
+        return matchesSearch && matchesContentSearch && matchesSentiment && isWithinDateRange;
     });
 
     return (
@@ -73,7 +81,11 @@ const FetchData = () => {
             <div className='content-container'>
                 <div className='search-filter-container'>
                     <h4>Search by Username:</h4>
-                    <input type='text' placeholder='Enter username' value={searchTerm} onChange={handleSearchChange}/>
+                    <input type='text' placeholder='Enter username' value={searchTerm} onChange={handleSearchChange} />
+                </div>
+                <div className='search-filter-container'>
+                    <h4>Search by Content:</h4>
+                    <input type='text' placeholder='Enter content' value={contentSearchTerm} onChange={handleContentSearchChange} />
                 </div>
                 <div className='search-filter-container'>
                     <h4>Filter by Sentiment:</h4>
@@ -87,11 +99,11 @@ const FetchData = () => {
                     <h4>Filter by Date Range:</h4>
                     <div>
                         <label>Start Date:</label>
-                        <input type='date' value={startDate} onChange={handleStartDateChange}/>
+                        <input type='date' value={startDate} onChange={handleStartDateChange} />
                     </div>
                     <div>
                         <label>End Date:</label>
-                        <input type='date' value={endDate} onChange={handleEndDateChange}/>
+                        <input type='date' value={endDate} onChange={handleEndDateChange} />
                     </div>
                 </div>
                 <div className='button-container'>
@@ -110,7 +122,7 @@ const FetchData = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {filteredData.map(({id, timestamp, username, content, sentiment}) => (
+                    {filteredData.map(({ id, timestamp, username, content, sentiment }) => (
                         <tr key={id}>
                             <td>{id}</td>
                             <td>{timestamp}</td>

@@ -4,6 +4,7 @@ import FetchData from './FetchData';
 import NavBar from './NavBar';
 import Home from "./Home";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import Request from "./Request";
 
 function App() {
     return (
@@ -19,7 +20,7 @@ function App() {
                             <FetchData/>
                         </Route>
                         <Route exact path="/request-settings">
-                            <FetchData/>
+                            <Request/>
                         </Route>
                     </Switch>
                 </div>
