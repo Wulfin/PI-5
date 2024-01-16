@@ -3,11 +3,9 @@ package ma.ac.emi.backend.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -26,14 +24,15 @@ public class Tweet implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String username;
 
-    @Column(nullable = false, length = 280)
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String sentiment;
 
-    
+
 }

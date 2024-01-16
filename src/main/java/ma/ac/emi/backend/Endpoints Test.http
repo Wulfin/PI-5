@@ -2,10 +2,10 @@ POST http://localhost:8081/tweets
 Content-Type: application/json
 
 {
-  "content": "1st Tweet",
+  "content": "",
   "timestamp": "2023-12-05 10:30:00",
   "sentiment": "Positive",
-  "username": "Souhail"
+  "username": "Laamoumri"
 }
 ###
 POST http://localhost:8081/tweets/batch
@@ -52,8 +52,12 @@ GET http://localhost:8081/tweets/username/Souhail
 ###
 GET http://localhost:8081/tweets/2
 ###
-DELETE http://localhost:8081/tweets/2
+DELETE http://localhost:8081/tweets/delete/all
 ###
 GET http://localhost:8081/tweets
 ###
 GET http://172.20.10.2:5001/tweets/palestine
+###
+GET http://127.0.0.1:5001/tweets/liverpool
+###
+GET http://localhost:8081/tweets/fetch/algeria

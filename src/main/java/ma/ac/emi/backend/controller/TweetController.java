@@ -2,6 +2,7 @@ package ma.ac.emi.backend.controller;
 
 import ma.ac.emi.backend.entity.Tweet;
 import ma.ac.emi.backend.repository.TweetRepository;
+import ma.ac.emi.backend.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tweets")
+@CrossOrigin
 public class TweetController {
 
     private final TweetRepository tweetRepository;
 
+    private final TweetService tweetService;
+
     @Autowired
-    public TweetController(TweetRepository tweetRepository) {
+    public TweetController(TweetRepository tweetRepository, TweetService tweetService) {
         this.tweetRepository = tweetRepository;
+        this.tweetService = tweetService;
     }
 
     @GetMapping
@@ -86,8 +91,37 @@ public class TweetController {
         }
     }
 
-    @PostMapping()
+/*    @PostMapping()
     public ResponseEntity<String> saveTweet(@RequestBody Tweet tweet) {
+        try {
+            // If the timestamp is not provided in the JSON, set it to the current date and time
+            if (tweet.getTimestamp() == null) {
+                tweet.setTimestamp(LocalDateTime.now());
+            }
+
+            // Save the tweet using the repository
+            tweetRepository.save(tweet);
+
+            return new ResponseEntity<>("Tweet saved successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error saving tweet: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+/*    @PostMapping("/batch")
+    public ResponseEntity<String> saveTweets(@RequestBody List<Tweet> tweets) {
+        try {
+            // Save each tweet in the list
+            tweetRepository.saveAll(tweets);
+
+            return new ResponseEntity<>("Tweets saved successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error saving tweets: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+    @PostMapping()
+    public ResponseEntity<String> saveTweet2(@RequestBody Tweet tweet) {
         try {
             // If the timestamp is not provided in the JSON, set it to the current date and time
             if (tweet.getTimestamp() == null) {
@@ -104,7 +138,7 @@ public class TweetController {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<String> saveTweets(@RequestBody List<Tweet> tweets) {
+    public ResponseEntity<String> saveTweets2(@RequestBody List<Tweet> tweets) {
         try {
             // Save each tweet in the list
             tweetRepository.saveAll(tweets);
@@ -112,6 +146,29 @@ public class TweetController {
             return new ResponseEntity<>("Tweets saved successfully", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error saving tweets: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/all")
+    public ResponseEntity<String> deleteAll() {
+        try {
+            tweetRepository.deleteAll();
+            return new ResponseEntity<>("Tweets Deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error in deleting tweets: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/fetch/{searchQuery}")
+    public ResponseEntity<List<Tweet>> fetchAllTweets(@PathVariable("searchQuery") String q) {
+        try {
+            List<Tweet> tweets = tweetService.fetchTweets(q);
+            for (Tweet tweet : tweets) {  // Fix the loop syntax
+                tweetService.saveTweet(tweet);
+            }
+            return new ResponseEntity<>(tweets, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
