@@ -1,4 +1,5 @@
-from flask import Flask
+import requests
+from flask import Flask, jsonify
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,6 +19,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import *
 from nltk.classify import NaiveBayesClassifier
 from pyspark.pandas.plot import matplotlib
+from pyspark.resource import requests as pyspark_requests
 from wordcloud import WordCloud
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -61,13 +63,17 @@ app = Flask(__name__)
 
 
 def fetch_sentiment_using_SIA(text):
+    if text is None:
+        return None
     sid = SentimentIntensityAnalyzer()
     polarity_scores = sid.polarity_scores(text)
-    return 'neg' if polarity_scores['neg'] > polarity_scores['pos'] else 'pos'
+    return 'Negative' if polarity_scores['neg'] > polarity_scores['pos'] else 'Positive'
 
 
 # Removing '@names'
 def remove_pattern(text, pattern_regex):
+    if text is None:
+        return ""
     r = re.findall(pattern_regex, text)
     for i in r:
         text = re.sub(i, '', text)
@@ -165,173 +171,179 @@ def naive_model(X_train, X_test, y_train, y_test):
     plot_confusion_matrix(conf_matrix)
 
 
-@app.route('/')
-def sentiment_analysis():
-    # Assuming you already have a DataFrame named 'df' with the provided data
-    data = [
-        {'tweets': "Does AI Truly Learn And Why We Need to Stop Ov..."},
-        {'tweets': "RT @IntuitMachine: Deep Learning and Why NOT S..."},
-        {'tweets': "RT @ipfconline1: Value of #DeepLearning \n\nht..."},
-        {'tweets': "RT @Sales_Source: Mainstream finally noticing ..."},
-        {'tweets': "Does AI Truly Learn And Why We Need to Stop Ov..."},
-        {'tweets': "RT @2peterharris: \"Data scientists all too oft..."},
-        {'tweets': "What's the difference between #AI and #Machine..."},
-        {'tweets': "RT @dmonett: \"Most dangerously, we take succes..."},
-        {'tweets': "RT @fbplatform: Udacity's introductory course ..."},
-        {'tweets': "Deep Learning: Perturbations and Diversity is ..."},
-    ]
+@app.route('/sentiments/<search_term>')
+def sentiment_analysis(search_term):
+    scrapper_url = f'http://localhost:5001/tweets/{search_term}'
 
-    # You can now use this 'data' list to create a DataFrame or save it to a CSV file, as needed.
-    df = pd.DataFrame(data)
+    # Use requests.get to make the actual request
+    response = requests.get(scrapper_url)
 
-    # Save the DataFrame to a CSV file
-    df.to_csv('tweets_data.csv', index=False)
+    if response.status_code == 200:
+        tweet_data = response.json()
+        if not tweet_data:
+            return jsonify({"message": "No tweets found."})
 
-    sentiments_using_SIA = df.tweets.apply(lambda tweet: fetch_sentiment_using_SIA(tweet))
-    pd.DataFrame(sentiments_using_SIA.value_counts())
-    df['sentiment'] = sentiments_using_SIA
+        # Create a DataFrame from the fetched tweet data
+        df = pd.DataFrame(tweet_data)
 
-    df['tidy_tweets'] = np.vectorize(remove_pattern)(df['tweets'], "@[\w]*: | *RT*")
+        # Perform sentiment analysis using your custom logic (e.g., SIA)
+        df['sentiment'] = df['tweet_text'].apply(lambda tweet: fetch_sentiment_using_SIA(tweet))
 
-    # Removing links (http | https)
-    cleaned_tweets = []
-    for index, row in df.iterrows():
-        # Here we are filtering out all the words that contains link
-        words_without_links = [word for word in row.tidy_tweets.split() if 'http' not in word]
-        cleaned_tweets.append(' '.join(words_without_links))
-    df['tidy_tweets'] = cleaned_tweets
+        df['tidy_tweets'] = np.vectorize(remove_pattern)(df['tweet_text'], "@[\w]*: | *RT*")
 
-    # Removing tweets with empty text
-    df = df[df['tidy_tweets'] != '']
+        # Removing links (http | https)
+        cleaned_tweets = []
+        for index, row in df.iterrows():
+            # Here we are filtering out all the words that contains link
+            words_without_links = [word for word in row.tidy_tweets.split() if 'http' not in word]
+            cleaned_tweets.append(' '.join(words_without_links))
+        df['tidy_tweets'] = cleaned_tweets
 
-    # Dropping duplicate rows
-    df.drop_duplicates(subset=['tidy_tweets'], keep=False)
+        # Removing tweets with empty text
+        df = df[df['tidy_tweets'] != '']
 
-    # Resetting index
-    df = df.reset_index(drop=True)
+        # Dropping duplicate rows
+        df.drop_duplicates(subset=['tidy_tweets'], keep=False)
 
-    # Removing Punctuations, Numbers and Special characters
-    df['absolute_tidy_tweets'] = df['tidy_tweets'].str.replace("[^a-zA-Z# ]", "")
+        # Resetting index
+        df = df.reset_index(drop=True)
 
-    # Removing Stop words
-    stopwords_set = set(stopwords)
-    cleaned_tweets = []
-    for index, row in df.iterrows():
-        # filerting out all the stopwords
-        words_without_stopwords = [word for word in row.absolute_tidy_tweets.split() if
-                                   not word in stopwords_set and '#' not in word.lower()]
+        # Removing Punctuations, Numbers and Special characters
+        df['absolute_tidy_tweets'] = df['tidy_tweets'].str.replace("[^a-zA-Z# ]", "")
 
-        # finally creating tweets list of tuples containing stopwords(list) and sentimentType
-        cleaned_tweets.append(' '.join(words_without_stopwords))
-    df['absolute_tidy_tweets'] = cleaned_tweets
+        # Removing Stop words
+        stopwords_set = set(stopwords)
+        cleaned_tweets = []
+        for index, row in df.iterrows():
+            # filerting out all the stopwords
+            words_without_stopwords = [word for word in row.absolute_tidy_tweets.split() if
+                                       not word in stopwords_set and '#' not in word.lower()]
 
-    # Tokenize *'absolute_tidy_tweets'*
-    tokenized_tweet = df['absolute_tidy_tweets'].apply(lambda x: x.split())
+            # finally creating tweets list of tuples containing stopwords(list) and sentimentType
+            cleaned_tweets.append(' '.join(words_without_stopwords))
+        df['absolute_tidy_tweets'] = cleaned_tweets
 
-    # Converting words to Lemma
-    word_lemmatizer = WordNetLemmatizer()
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [word_lemmatizer.lemmatize(i) for i in x])
+        # Tokenize *'absolute_tidy_tweets'*
+        tokenized_tweet = df['absolute_tidy_tweets'].apply(lambda x: x.split())
 
-    # Joining all tokens into sentences
-    for i, tokens in enumerate(tokenized_tweet):
-        tokenized_tweet[i] = ' '.join(tokens)
-    df['absolute_tidy_tweets'] = tokenized_tweet
+        # Converting words to Lemma
+        word_lemmatizer = WordNetLemmatizer()
+        tokenized_tweet = tokenized_tweet.apply(lambda x: [word_lemmatizer.lemmatize(i) for i in x])
 
-    # Grammatical rule to identify phrases
-    sentence_re = r'(?:(?:[A-Z])(?:.[A-Z])+.?)|(?:\w+(?:-\w+)*)|(?:\$?\d+(?:.\d+)?%?)|(?:...|)(?:[][.,;"\'?():-_`])'
-    grammar = r"""
-        NBAR:
-            {<NN.*|JJ>*<NN.*>}  # Nouns and Adjectives, terminated with Nouns
+        # Joining all tokens into sentences
+        for i, tokens in enumerate(tokenized_tweet):
+            tokenized_tweet[i] = ' '.join(tokens)
+        df['absolute_tidy_tweets'] = tokenized_tweet
 
-        NP:
-            {<NBAR>}
-            {<NBAR><IN><NBAR>}  # Above, connected with in/of/etc...
-    """
-    chunker = nltk.RegexpParser(grammar)
+        # Grammatical rule to identify phrases
+        sentence_re = r'(?:(?:[A-Z])(?:.[A-Z])+.?)|(?:\w+(?:-\w+)*)|(?:\$?\d+(?:.\d+)?%?)|(?:...|)(?:[][.,;"\'?():-_`])'
+        grammar = r"""
+            NBAR:
+                {<NN.*|JJ>*<NN.*>}  # Nouns and Adjectives, terminated with Nouns
 
-    # New feature called 'key_phrases', will contain phrases for corresponding tweet
-    textblob_key_phrases = []
-    extractor = ConllExtractor()
-    for index, row in df.iterrows():
-        # filerting out all the hashtags
-        words_without_hash = [word for word in row.tidy_tweets.split() if '#' not in word.lower()]
-        hash_removed_sentence = ' '.join(words_without_hash)
-        blob = TextBlob(hash_removed_sentence, np_extractor=extractor)
-        textblob_key_phrases.append(list(blob.noun_phrases))
-    textblob_key_phrases[:10]
-    df['key_phrases'] = textblob_key_phrases
+            NP:
+                {<NBAR>}
+                {<NBAR><IN><NBAR>}  # Above, connected with in/of/etc...
+        """
+        chunker = nltk.RegexpParser(grammar)
 
-    # Story Generation and Visualization
+        # New feature called 'key_phrases', will contain phrases for corresponding tweet
+        textblob_key_phrases = []
+        extractor = ConllExtractor()
+        for index, row in df.iterrows():
+            # filerting out all the hashtags
+            words_without_hash = [word for word in row.tidy_tweets.split() if '#' not in word.lower()]
+            hash_removed_sentence = ' '.join(words_without_hash)
+            blob = TextBlob(hash_removed_sentence, np_extractor=extractor)
+            textblob_key_phrases.append(list(blob.noun_phrases))
+        textblob_key_phrases[:10]
+        df['key_phrases'] = textblob_key_phrases
 
-    all_words = ' '.join([text for text in df['absolute_tidy_tweets'][df.sentiment == 'pos']])
-    generate_wordcloud(all_words)
+        # Story Generation and Visualization
 
-    # Most common words in negative tweets
-    all_words = ' '.join([text for text in df['absolute_tidy_tweets'][df.sentiment == 'neg']])
-    generate_wordcloud(all_words)
+        all_words = ' '.join([text for text in df['absolute_tidy_tweets'][df.sentiment == 'Positive']])
+        generate_wordcloud(all_words)
 
-    # Most commonly used Hashtags
+        # Most common words in negative tweets
+        all_words = ' '.join([text for text in df['absolute_tidy_tweets'][df.sentiment == 'Negative']])
+        generate_wordcloud(all_words)
 
-    hashtags = hashtag_extract(df['tidy_tweets'])
-    hashtags = sum(hashtags, [])
+        # Most commonly used Hashtags
 
-    # For sake of consistency, we are going to discard the records which contains no phrases i.e where tweets_df['key_phrases'] contains []
-    df2 = df[df['key_phrases'].str.len() > 0]
+        hashtags = hashtag_extract(df['tidy_tweets'])
+        hashtags = sum(hashtags, [])
 
-    # Feature Extraction
+        # For sake of consistency, we are going to discard the records which contains no phrases i.e where tweets_df['key_phrases'] contains []
+        df2 = df[df['key_phrases'].str.len() > 0]
 
-    # Feature Extraction for 'Key Words'
-    # BOW features
-    bow_word_vectorizer = CountVectorizer(max_df=0.90, min_df=2, stop_words='english')
-    # bag-of-words feature matrix
-    bow_word_feature = bow_word_vectorizer.fit_transform(df2['absolute_tidy_tweets'])
-    # TF-IDF features
-    tfidf_word_vectorizer = TfidfVectorizer(max_df=0.90, min_df=2, stop_words='english')
-    # TF-IDF feature matrix
-    tfidf_word_feature = tfidf_word_vectorizer.fit_transform(df2['absolute_tidy_tweets'])
+        # Feature Extraction
 
-    # Feature Extraction for 'Key Phrases'
-    phrase_sents = df2['key_phrases'].apply(lambda x: ' '.join(x))
-    # BOW phrase features
-    bow_phrase_vectorizer = CountVectorizer(max_df=0.90, min_df=2)
-    bow_phrase_feature = bow_phrase_vectorizer.fit_transform(phrase_sents)
-    # TF-IDF phrase feature
-    tfidf_phrase_vectorizer = TfidfVectorizer(max_df=0.90, min_df=2)
-    tfidf_phrase_feature = tfidf_phrase_vectorizer.fit_transform(phrase_sents)
+        # Feature Extraction for 'Key Words'
+        # BOW features
+        bow_word_vectorizer = CountVectorizer(max_df=0.90, min_df=2, stop_words='english')
+        # bag-of-words feature matrix
+        bow_word_feature = bow_word_vectorizer.fit_transform(df2['absolute_tidy_tweets'])
+        # TF-IDF features
+        tfidf_word_vectorizer = TfidfVectorizer(max_df=0.90, min_df=2, stop_words='english')
+        # TF-IDF feature matrix
+        tfidf_word_feature = tfidf_word_vectorizer.fit_transform(df2['absolute_tidy_tweets'])
 
-    # Model Building: Sentiment Analysis
+        # Feature Extraction for 'Key Phrases'
+        phrase_sents = df2['key_phrases'].apply(lambda x: ' '.join(x))
+        # BOW phrase features
+        bow_phrase_vectorizer = CountVectorizer(max_df=0.90, min_df=2)
+        bow_phrase_feature = bow_phrase_vectorizer.fit_transform(phrase_sents)
+        # TF-IDF phrase feature
+        tfidf_phrase_vectorizer = TfidfVectorizer(max_df=0.90, min_df=2)
+        tfidf_phrase_feature = tfidf_phrase_vectorizer.fit_transform(phrase_sents)
 
-    # Map target variables to {0, 1}
-    target_variable = df2['sentiment'].apply(lambda x: 0 if x == 'neg' else 1)
+        # Model Building: Sentiment Analysis
 
-    # Predictions on 'key words' based features
-    # BOW word features
-    X_train, X_test, y_train, y_test = train_test_split(bow_word_feature, target_variable, test_size=0.3,
-                                                        random_state=272)
-    naive_model(X_train, X_test, y_train, y_test)
-    # TF-IDF word features
-    X_train, X_test, y_train, y_test = train_test_split(tfidf_word_feature, target_variable, test_size=0.3,
-                                                        random_state=272)
-    naive_model(X_train, X_test, y_train, y_test)
+        # Map target variables to {0, 1}
+        target_variable = df2['sentiment'].apply(lambda x: 0 if x == 'neg' else 1)
 
-    # Predictions on 'key phrases' based features
-    # BOW Phrase features
-    X_train, X_test, y_train, y_test = train_test_split(bow_phrase_feature, target_variable, test_size=0.3,
-                                                        random_state=272)
-    naive_model(X_train, X_test, y_train, y_test)
-    # TF-IDF Phrase features
-    X_train, X_test, y_train, y_test = train_test_split(tfidf_phrase_feature, target_variable, test_size=0.3,
-                                                        random_state=272)
-    naive_model(X_train, X_test, y_train, y_test)
+        # Predictions on 'key words' based features
+        # BOW word features
+        X_train, X_test, y_train, y_test = train_test_split(bow_word_feature, target_variable, test_size=0.3,
+                                                            random_state=272)
+        naive_model(X_train, X_test, y_train, y_test)
+        # TF-IDF word features
+        X_train, X_test, y_train, y_test = train_test_split(tfidf_word_feature, target_variable, test_size=0.3,
+                                                            random_state=272)
+        naive_model(X_train, X_test, y_train, y_test)
 
-    # Press the green button in the gutter to run the script.
+        # Predictions on 'key phrases' based features
+        # BOW Phrase features
+        X_train, X_test, y_train, y_test = train_test_split(bow_phrase_feature, target_variable, test_size=0.3,
+                                                            random_state=272)
+        naive_model(X_train, X_test, y_train, y_test)
+        # TF-IDF Phrase features
+        X_train, X_test, y_train, y_test = train_test_split(tfidf_phrase_feature, target_variable, test_size=0.3,
+                                                            random_state=272)
+        naive_model(X_train, X_test, y_train, y_test)
+
+        # Extract the required information for each tweet
+        tweets_result = []
+        for index, row in df.iterrows():
+            timestamp = row.get('datetime', '')
+            username = row.get('username', '')
+
+            tweet_result = {
+                "content": row['tidy_tweets'],
+                "timestamp": timestamp,
+                "sentiment": row['sentiment'],
+                "username": username,
+            }
+            tweets_result.append(tweet_result)
+
     print(df.head())
+    print(df.iterrows())
     print(df['tidy_tweets'])
     print(df['sentiment'])
-    print(tokenized_tweet)
-    generate_hashtag_freqdist(hashtags)
-    print(df2)
-    return 'Hello World!'
+    # print(tokenized_tweet)
+    # generate_hashtag_freqdist(hashtags)
+    # print(df2)
+    return jsonify({"tweets": tweets_result})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=5002)
