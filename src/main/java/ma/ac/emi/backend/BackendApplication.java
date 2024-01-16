@@ -20,14 +20,14 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner(TweetService tweetService,TweetRepository tweetRepository){
-
-        return args -> {
-            //List<Tweet> tweets = tweetService.fetchTweets("Morocco");
-            //System.out.println(tweets);
-            //tweetRepository.saveAll(tweets);
-        };
-    }
+//    @Bean
+//    CommandLineRunner commandLineRunner(TweetService tweetService,TweetRepository tweetRepository){
+//
+//        return args -> {
+//            List<Tweet> tweets = tweetService.fetchTweets("Morocco");
+//            System.out.println(tweets);
+//            tweetRepository.saveAll(tweets);
+//        };
+//    }
 
 }

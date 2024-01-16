@@ -19,7 +19,7 @@ public class TweetDTO {
     private LocalDateTime timestamp;
     @JsonProperty("username")
     private String username;
-    @JsonProperty("tweet_text")
+    @JsonProperty("content")
     private String content;
     @JsonProperty("sentiment")
     private String sentiment;

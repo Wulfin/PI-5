@@ -1,3 +1,4 @@
+###
 POST http://localhost:8081/tweets
 Content-Type: application/json
 
@@ -61,3 +62,5 @@ GET http://172.20.10.2:5001/tweets/palestine
 GET http://127.0.0.1:5001/tweets/liverpool
 ###
 GET http://localhost:8081/tweets/fetch/algeria
+###
+GET http://localhost:8081/tweets/fetch/palestine

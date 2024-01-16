@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "TweetClient", url = "http://localhost:5001")
+@FeignClient(name = "TweetClient", url = "http://localhost:5000")
 public interface TweetClient {
 
-    @GetMapping("/tweets/{searchQuery}")
+    @GetMapping("/sentiments/{searchQuery}")
     List<TweetDTO> getTweets(@PathVariable("searchQuery")String q);
 }
