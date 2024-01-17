@@ -19,14 +19,14 @@ bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
 
 
 def save_to_json(tweet_data):
-    filename = "tweets.json"  # JSON filename
+    filename = "result_scraping.json"  # JSON filename
     with open(filename, "w", encoding="utf-8") as jsonfile:
         json.dump(tweet_data, jsonfile, indent=4)  # Write tweet data to JSON file
 
 
 # Function to save tweet data to a CSV file
 def save_to_csv(tweet_data):
-    filename = "tweets.csv"
+    filename = "result_scraping.csv"
     fieldnames = ["username", "datetime", "tweet_text", "replies", "retweets", "likes"]  # Update fieldnames to match dictionary keys
 
     with open(filename, "w", newline="", encoding="utf-8") as csvfile:
