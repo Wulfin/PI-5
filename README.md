@@ -77,75 +77,59 @@ pyhton app.py
 <br>
 <br>
 
-## Backend Application
+## Application Backend
 
-This Spring Boot application serves as the backend for a system handling tweets. It uses Spring Data JPA for data persistence and communicates with other services using Feign Clients. The application provides endpoints for retrieving and manipulating tweet data.
+Cette application Spring Boot sert de backend pour un système de gestion des tweets. Elle utilise Spring Data JPA pour la persistance des données et communique avec d'autres services en utilisant des Feign Clients. L'application offre des points d'accès pour récupérer et manipuler les données des tweets.
 
-### Prerequisites
+### Démarrage
 
-Before running the project, ensure that you have the following installed:
+Suivez les étapes ci-dessous pour exécuter le projet (en supposant que le dépôt a déjà été cloné) :
 
-- Java Development Kit (JDK) - version 8 or higher
-- Apache Maven - for building and managing the project
-
-### Getting Started
-
-Follow the steps below to run the project (supposing the repo is already cloned):
-
-1. Navigate to the project directory:
+1. Accédez au répertoire du projet :
 
 ```bash
 cd Microservice-Backend
 ```
 
-2. Run the Spring Boot application (since the project is working with H2, the database is already set and :
+2. Lancez l'application Spring Boot (comme le projet fonctionne avec H2, la base de données est déjà configurée) :
 
 ```bash
 java -jar target/Backend-0.0.1-SNAPSHOT.jar
 ```
 
-The application will start running on `http://localhost:8080/`.
+L'application démarrera sur `http://localhost:8080/`.
 
-![Backend server](screenshots/screenshotSpring.png)
+![Serveur Backend](screenshots/screenshotSpring.png)
 
 <br>
 <br>
 
-## Tweet Management React App
+## Application Frontend de Gestion des Tweets
 
-This React application provides a user interface for managing and visualizing tweets. It interacts with a backend API to fetch and display tweet data, and it includes features such as requesting settings and graphical representation of data.
+Cette application React fournit une interface utilisateur pour la gestion et la visualisation des tweets. Elle interagit avec une API backend pour récupérer et afficher les données des tweets, et inclut des fonctionnalités telles que la configuration des paramètres de requête et la représentation graphique des données.
 
-### Prerequisites
+### Démarrage
 
-Before running the project, ensure that you have the following installed:
+Suivez les étapes ci-dessous pour exécuter le projet :
 
-- Node.js - JavaScript runtime for executing JavaScript code outside a web browser
-- npm (Node Package Manager) - for managing project dependencies
-- Backend API - Make sure the backend API is running and accessible.
-
-### Getting Started
-
-Follow the steps below to run the project:
-
-1. Navigate to the project directory:
+1. Accédez au répertoire du projet :
 
 ```bash
 cd Microservice-Frontend
 ```
 
-2. Install project dependencies using npm:
+2. Installez les dépendances du projet avec npm :
 
 ```bash
 npm install
 ```
 
-3. Run the React application:
+3. Lancez l'application React :
 
 ```bash
 npm start
 ```
 
-The application will start running on `http://localhost:3000/`.
+L'application démarrera sur `http://localhost:3000/`.
 
-![Frontend server](screenshots/Frontend.png)
-
+![Serveur Frontend](screenshots/Frontend.png)
