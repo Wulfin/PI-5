@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "TweetClient", url = "http://localhost:5000")
+@FeignClient(name = "TweetClient", url = "http://localhost:5002")
 public interface TweetClient {
 
     @GetMapping("/sentiments/{searchQuery}")
