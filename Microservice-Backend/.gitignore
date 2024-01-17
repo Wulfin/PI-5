@@ -14,5 +14,3 @@ log/
 *.ipr
 *.iws
 *.log
-# Ignore application.properties
-src/main/resources/application.properties
