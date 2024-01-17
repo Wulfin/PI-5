@@ -99,7 +99,7 @@ java -jar target/Backend-0.0.1-SNAPSHOT.jar
 
 L'application démarrera sur `http://localhost:8080/`.
 
-![Serveur Backend](screenshots/screenshotSpring.png)
+![Serveur Backend](screenshots/screenshotSpring.jpg)
 
 <br>
 <br>
