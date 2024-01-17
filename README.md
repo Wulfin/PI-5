@@ -63,3 +63,73 @@ pyhton app.py
 ```
 ![Sentiment Analysis server](screenshots/screenshot2.png)
 
+## Backend Application
+
+This Spring Boot application serves as the backend for a system handling tweets. It uses Spring Data JPA for data persistence and communicates with other services using Feign Clients. The application provides endpoints for retrieving and manipulating tweet data.
+
+### Prerequisites
+
+Before running the project, ensure that you have the following installed:
+
+- Java Development Kit (JDK) - version 8 or higher
+- Apache Maven - for building and managing the project
+
+### Getting Started
+
+Follow the steps below to run the project (supposing the repo is already cloned):
+
+1. Navigate to the project directory:
+
+```bash
+cd Microservice-Backend
+```
+
+2. Run the Spring Boot application (since the project is working with H2, the database is already set and :
+
+```bash
+java -jar target/Backend-0.0.1-SNAPSHOT.jar
+```
+
+The application will start running on `http://localhost:8080/`.
+
+![Backend server](screenshots/screenshotSpring.png)
+
+
+## Tweet Management React App
+
+This React application provides a user interface for managing and visualizing tweets. It interacts with a backend API to fetch and display tweet data, and it includes features such as requesting settings and graphical representation of data.
+
+### Prerequisites
+
+Before running the project, ensure that you have the following installed:
+
+- Node.js - JavaScript runtime for executing JavaScript code outside a web browser
+- npm (Node Package Manager) - for managing project dependencies
+- Backend API - Make sure the backend API is running and accessible.
+
+### Getting Started
+
+Follow the steps below to run the project:
+
+1. Navigate to the project directory:
+
+```bash
+cd Microservice-Frontend
+```
+
+2. Install project dependencies using npm:
+
+```bash
+npm install
+```
+
+3. Run the React application:
+
+```bash
+npm start
+```
+
+The application will start running on `http://localhost:3000/`.
+
+![Frontend server](screenshots/Frontend.png)
+
