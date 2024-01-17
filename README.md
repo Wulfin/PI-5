@@ -63,6 +63,8 @@ pyhton app.py
 ```
 ![Sentiment Analysis server](screenshots/screenshot2.png)
 
+
+
 ## Backend Application
 
 This Spring Boot application serves as the backend for a system handling tweets. It uses Spring Data JPA for data persistence and communicates with other services using Feign Clients. The application provides endpoints for retrieving and manipulating tweet data.
@@ -93,6 +95,7 @@ java -jar target/Backend-0.0.1-SNAPSHOT.jar
 The application will start running on `http://localhost:8080/`.
 
 ![Backend server](screenshots/screenshotSpring.png)
+
 
 
 ## Tweet Management React App
