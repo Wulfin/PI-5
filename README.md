@@ -24,3 +24,7 @@ Avant d'exécuter le projet, assurez-vous d'avoir les dépendances suivantes ins
   BeautifulSoup
   Firefox 
 
+```bash
+pip install flask selenium beautifulsoup4
+```
+
