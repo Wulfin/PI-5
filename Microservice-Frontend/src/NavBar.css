@@ -1,0 +1,43 @@
+/* NavBar.css */
+
+.navbar {
+    background-color: #1da1f2; /* Twitter blue background for the navbar */
+    color: #fff; /* White text color */
+    padding: 10px;
+    display: flex;
+    justify-content: space-between; /* Space content evenly */
+    align-items: center; /* Center content vertically */
+}
+
+.navbar-title {
+    text-align: left;
+    flex: 1; /* Expand to fill available space */
+}
+
+.title-link {
+    text-decoration: none;
+    color: #fff; /* White text color for links */
+    font-size: 1.5rem; /* Adjust the font size */
+}
+
+.navbar-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    align-items: center; /* Center content vertically within the navbar */
+}
+
+.navbar li {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #fff; /* White text color for links */
+    transition: color 0.3s; /* Add transition effect for color change */
+}
+
+.navbar a:hover {
+    color: #ffd700; /* Change color on hover (gold/yellow) */
+}
