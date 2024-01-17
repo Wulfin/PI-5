@@ -33,3 +33,4 @@ Après on accède au dossier du microservice et on lance le microservice :
 cd Microservice-Scraper
 pyhton scraper.py
 ```
+![Scraper server](screenshots/screenshot1.png)
