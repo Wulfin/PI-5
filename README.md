@@ -37,6 +37,9 @@ pyhton scraper.py
 ```
 ![Scraper server](screenshots/screenshot1.png)
 
+<br>
+<br>
+
 ## Microservice du Sentiment Analysis Flask API
 Ce microservice implémente une API Flask pour l'analyse de sentiment des tweets. Il utilise un modèle d'apprentissage automatique pré-entraîné pour prédire le sentiment des tweets fournis. Le modèle d'analyse de sentiment est basé sur la régression logistique et est entraîné sur un ensemble de données contenant des tweets positifs et négatifs.
 
