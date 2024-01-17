@@ -28,3 +28,8 @@ Avant d'exécuter le projet, assurez-vous d'avoir les dépendances suivantes ins
 pip install flask selenium beautifulsoup4
 ```
 
+Après on accède au dossier du microservice et on lance le microservice :
+```bash
+cd Microservice-Scraper
+pyhton scraper.py
+```
