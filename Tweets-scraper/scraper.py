@@ -53,7 +53,6 @@ def search(search_term):
     time.sleep(1)
     driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]/div').click()
     time.sleep(2)
-    # driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[1]/div[1]/div/div/div[1]/div[1]/div/div/div/div[2]/div/label/div/div[1]/div/input').send_keys('')
     driver.find_element("name" ,"password").send_keys(os.getenv("TWITTER_PASSWORD"))
     time.sleep(1)
     driver.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div/div').click()
