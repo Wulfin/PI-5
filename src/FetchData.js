@@ -76,6 +76,8 @@ const FetchData = () => {
         return matchesSearch && matchesContentSearch && matchesSentiment && isWithinDateRange;
     });
 
+
+
     return (
         <div className='page-container'>
             <div className='content-container'>

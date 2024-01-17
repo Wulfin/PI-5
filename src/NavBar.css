@@ -9,7 +9,18 @@
     align-items: center; /* Center content vertically */
 }
 
-.navbar ul {
+.navbar-title {
+    text-align: left;
+    flex: 1; /* Expand to fill available space */
+}
+
+.title-link {
+    text-decoration: none;
+    color: #fff; /* White text color for links */
+    font-size: 1.5rem; /* Adjust the font size */
+}
+
+.navbar-links {
     list-style: none;
     padding: 0;
     display: flex;
@@ -24,14 +35,9 @@
 .navbar a {
     text-decoration: none;
     color: #fff; /* White text color for links */
+    transition: color 0.3s; /* Add transition effect for color change */
 }
 
-.navbar-logo {
-    display: flex;
-    align-items: center;
-}
-
-.twitter-logo {
-    width: 60px; /* Adjust the size as needed */
-    margin-right: 10px;
+.navbar a:hover {
+    color: #ffd700; /* Change color on hover (gold/yellow) */
 }

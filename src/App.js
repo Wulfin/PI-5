@@ -5,6 +5,8 @@ import NavBar from './NavBar';
 import Home from "./Home";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Request from "./Request";
+import Graphics from "./Graphics";
+import DonutChart from "./Graphics";
 
 function App() {
     return (
