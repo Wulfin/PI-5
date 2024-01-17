@@ -1,0 +1,18 @@
+### IntelliJ IDEA ###
+# IntelliJ IDEA
+.idea/
+# Maven
+target/
+# Logs
+log/
+# Package Files
+*.jar
+*.war
+*.ear
+# IDE-specific files
+*.iml
+*.ipr
+*.iws
+*.log
+# Ignore application.properties
+src/main/resources/application.properties
