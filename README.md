@@ -13,6 +13,17 @@ Apres avoir lancer les differents microservices, vous pouvez lancer une requete 
 <br>
 <br>
 
+## Clone the project :
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/Wulfin/PI-5.git
+```
+
+<br>
+<br>
+
 ## Microservice du Twitter Scraper Flask API
 
 Ce microservice implémente une API Flask pour le scraping de tweets en utilisant un navigateur sans tête (Selenium) et BeautifulSoup. Il vous permet de rechercher des tweets en fonction d'un terme de recherche spécifié et de récupérer des informations pertinentes telles que les noms d'utilisateur, le texte des tweets, la date et l'heure, les réponses, les retweets et les likes.
@@ -63,7 +74,8 @@ pyhton app.py
 ```
 ![Sentiment Analysis server](screenshots/screenshot2.png)
 
-
+<br>
+<br>
 
 ## Backend Application
 
@@ -96,7 +108,8 @@ The application will start running on `http://localhost:8080/`.
 
 ![Backend server](screenshots/screenshotSpring.png)
 
-
+<br>
+<br>
 
 ## Tweet Management React App
 
